@@ -64,7 +64,6 @@ def plus_cart(request):
 def minus_cart(request):
     if request.method == 'GET':
         prod_id = request.GET['prod_id']
-        # print(prod_id)
         c = Cart.objects.get(Q(product=prod_id) & Q(user=request.user))
         c.quantity -= 1
         c.save()
@@ -108,18 +107,15 @@ def show_cart(request):
     if request.user.is_authenticated:
         user = request.user
         cart = Cart.objects.filter(user=user)
-        # print(cart)
         amount = 0.0
         shipping_amount = 50.0
         cart_product = [p for p in Cart.objects.all() if p.user == user]
         total_products = len(cart_product)
-        # print(cart_product)
         if cart_product:
             for p in cart_product:
                 temp = (p.quantity * p.product.discounted_price)
                 amount += temp
                 total_amount = amount + shipping_amount
-            # print(total_amount)
             return render(request, 'app/cart.html', {'carts': cart, 'total_amount': total_amount, 'amount': amount,
                                                      'total_products': total_products})
         else:
@@ -161,8 +157,6 @@ def address(request):
 def delete_address(request, id):
     if request.method == 'POST':
         pi = Customer.objects.get(pk=id)
-        # print(pi.user)
-        # print(request.user)
         pi.delete()
         return redirect('address')
 
